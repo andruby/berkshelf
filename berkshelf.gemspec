@@ -9,10 +9,10 @@ Gem::Specification.new do |s|
     "Justin Campbell"
   ]
   s.email                 = [
-    "jamie@vialstudios.com",
-    "josiah@skirmisher.net",
-    "ivey@gweezlebur.com",
-    "justin@justincampbell.me"
+    "reset@riotgames.com",
+    "jkiehl@riotgames.com",
+    "michael.ivey@riotgames.com",
+    "justin.campbell@riotgames.com"
   ]
 
   s.description           = %q{Manages a Cookbook's, or an Application's, Cookbook dependencies}
@@ -29,13 +29,30 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'yajl-ruby'
   s.add_dependency 'activesupport'
-  s.add_dependency 'chef', '>= 10.16.2'
-  s.add_dependency 'ridley', '>= 0.4.1'
-  s.add_dependency 'chozo', '>= 0.2.3'
+  # Must lock 10.16 because of Vagrant 1-0-stable JSON requirement
+  s.add_dependency 'chef', '= 10.16.2'
+  s.add_dependency 'ridley', '>= 0.7.0.rc1'
+  s.add_dependency 'chozo', '>= 0.4.2'
   s.add_dependency 'hashie'
   s.add_dependency 'minitar'
-  s.add_dependency 'multi_json', '>= 1.3.0'
+  s.add_dependency 'json', '>= 1.5.0'
+  s.add_dependency 'multi_json', '~> 1.5'
   s.add_dependency 'solve', '>= 0.4.0.rc1'
   s.add_dependency 'thor', '~> 0.16.0'
-  s.add_dependency 'vagrant'
+
+  # Vagrant 1-0-stable compatability locks
+  # s.add_dependency 'moneta', '~> 0.6.0'
+  # s.add_dependency 'net-ssh-gateway', '= 1.1.0'
+
+  s.add_development_dependency 'aruba'
+  s.add_development_dependency 'cane'
+  s.add_development_dependency 'json_spec'
+  s.add_development_dependency 'rake', '>= 0.9.2.2'
+  s.add_development_dependency 'rspec'
+  s.add_development_dependency 'simplecov'
+  s.add_development_dependency 'spork'
+  s.add_development_dependency 'thor'
+  s.add_development_dependency 'vcr'
+  s.add_development_dependency 'webmock'
+  s.add_development_dependency 'vagrant', '~> 1.0.6'
 end

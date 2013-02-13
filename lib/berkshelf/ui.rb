@@ -1,5 +1,5 @@
 module Berkshelf
-  class UI < ::Thor::Shell::Basic
+  module UI
     # Mute the output of this instance of UI until {#unmute!} is called
     def mute!
       @mute = true
@@ -27,6 +27,10 @@ module Berkshelf
       return if quiet?
       
       say(message, color)
+    end
+
+    def deprecated(message)
+      warn("[DEPRECATION] #{message}")
     end
 
     def error(message, color = :red)

@@ -1,5 +1,3 @@
-notification :off
-
 guard 'spork' do
   watch('Gemfile')
   watch('spec/spec_helper.rb')  { :rspec }
@@ -24,4 +22,8 @@ guard 'cucumber', cli: "--drb --format pretty --tags ~@no_run --tags ~@wip", all
   watch(%r{^features/step_definitions/(.+)_steps\.rb$}) { |m| Dir[File.join("**/#{m[1]}.feature")][0] || 'features' }
 
   watch(%r{^lib/berkshelf/cli.rb})                      { 'features' }
+end
+
+guard 'cane' do
+  watch(/.*\.rb/)
 end

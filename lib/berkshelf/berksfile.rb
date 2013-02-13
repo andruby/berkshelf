@@ -1,7 +1,7 @@
 require 'chef/cookbook/chefignore'
 
 module Berkshelf
-  # @author Jamie Winsor <jamie@vialstudios.com>
+  # @author Jamie Winsor <reset@riotgames.com>
   class Berksfile
     extend Forwardable
 
@@ -468,7 +468,6 @@ module Berkshelf
     #   group to be installed and all others to be ignored
     # @option cookbooks [String, Array] :cookbooks
     #   Names of the cookbooks to retrieve sources for
-    # @option options [Integer] :thread_count
     # @option options [Hash] :params
     #   URI query unencoded key/value pairs
     # @option options [Hash] :headers
@@ -484,12 +483,18 @@ module Berkshelf
     def upload(options = {})
       uploader = Uploader.new(options)
       solution = resolve(options)
-
       solution.each do |cb|
         Berkshelf.formatter.upload cb.cookbook_name, cb.version, options[:server_url]
         uploader.upload(cb, options)
       end
-
+      if options[:skip_dependencies]
+        missing_cookbooks = options.fetch(:cookbooks, nil) - solution.map(&:cookbook_name)
+        unless missing_cookbooks.empty?
+          msg = "Unable to upload cookbooks: #{missing_cookbooks.sort.join(', ')}\n"
+          msg << "Specified cookbooks must be defined within the Berkshelf file when using the `--skip-dependencies` option"
+          raise ExplicitCookbookNotFound.new(msg)
+        end
+      end
     rescue Ridley::Errors::ClientKeyFileNotFound => e
       msg = "Could not upload cookbooks: Missing Chef client key: '#{Berkshelf::Config.instance.chef.client_key}'."
       msg << " Generate or update your Berkshelf configuration that contains a valid path to a Chef client key."
@@ -509,10 +514,27 @@ module Berkshelf
     #
     # @return [Array<Berkshelf::CachedCookbooks]
     def resolve(options = {})
+      resolver(options).resolve
+    end
+
+    # Builds a Resolver instance
+    #
+    # @option options [Symbol, Array] :except
+    #   Group(s) to exclude which will cause any sources marked as a member of the
+    #   group to not be installed
+    # @option options [Symbol, Array] :only
+    #   Group(s) to include which will cause any sources marked as a member of the
+    #   group to be installed and all others to be ignored
+    # @option cookbooks [String, Array] :cookbooks
+    #   Names of the cookbooks to retrieve sources for
+    #
+    # @return <Berkshelf::Resolver>
+    def resolver(options={})
       Resolver.new(
         self.downloader,
-        sources: sources(options)
-      ).resolve
+        sources: sources(options),
+        skip_dependencies: options[:skip_dependencies]
+      )
     end
 
     # Reload this instance of Berksfile with the given content. The content

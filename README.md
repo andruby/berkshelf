@@ -1,22 +1,47 @@
-# Berkshelf
-[![Build Status](https://travis-ci.org/RiotGames/berkshelf.png)](https://travis-ci.org/RiotGames/berkshelf)
-[![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/RiotGames/berkshelf)
+Berkshelf
+=========
+[![Build Status](https://travis-ci.org/RiotGames/berkshelf.png?branch=master)](https://travis-ci.org/RiotGames/berkshelf)
+[![Code Climate](https://codeclimate.com/github/RiotGames/berkshelf.png)](https://codeclimate.com/github/RiotGames/berkshelf)
 
 Manage a Cookbook or an Application's Cookbook dependencies
 
-## Installation
+Installation
+------------
+Add Berkshelf to your repository's `Gemfile`:
 
-    $ gem install berkshelf
+```ruby
+gem 'berkshelf'
+```
 
-## Usage
+Or run it as a standalone:
 
+    gem install berkshelf
+
+Usage
+-----
 See [berkshelf.com](http://berkshelf.com) for up-to-date usage instructions.
 
-# Authors
+Bash Completion
+---------------
+There is a [berkshelf bash completion script](https://raw.github.com/RiotGames/berkshelf/master/berkshelf-complete.sh). If you're using homebrew, you can install it like this:
 
-* Jamie Winsor (<jamie@vialstudios.com>)
-* Josiah Kiehl (<josiah@skirmisher.net>)
-* Michael Ivey (<ivey@gweezlebur.com>)
-* Justin Campbell (<justin@justincampbell.me>)
+    brew install bash-completion # if you haven't already
+
+Download the latest script
+
+    cd `brew --prefix`/etc/bash_completion && wget https://raw.github.com/RiotGames/berkshelf/master/berkshelf-complete.sh
+
+And make sure you have this in your bash/zsh profile:
+
+    [ -f `brew --prefix`/etc/bash_completion ] && source `brew --prefix`/etc/bash_completion
+
+Authors
+-------
+- Jamie Winsor (<reset@riotgames.com>)
+- Josiah Kiehl (<jkiehl@riotgames.com>)
+- Michael Ivey (<michael.ivey@riotgames.com>)
+- Justin Campbell (<justin.campbell@riotgames.com>)
 
 Thank you to all of our [Contributors](https://github.com/RiotGames/berkshelf/graphs/contributors), testers, and users.
+
+If you'd like to contribute, please see our [contribution guidelines](https://github.com/RiotGames/berkshelf/blob/master/CONTRIBUTING.md) first.

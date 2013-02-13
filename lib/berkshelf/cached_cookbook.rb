@@ -1,8 +1,13 @@
-require 'chef/checksum_cache'
+if Berkshelf.chef_11?
+  require 'chef/digester'
+else
+  require 'chef/checksum_cache'
+end
+
 require 'chef/cookbook/syntax_check'
 
 module Berkshelf
-  # @author Jamie Winsor <jamie@vialstudios.com>
+  # @author Jamie Winsor <reset@riotgames.com>
   class CachedCookbook
     class << self
       # Creates a new instance of Berkshelf::CachedCookbook from a path on disk that
@@ -26,6 +31,7 @@ module Berkshelf
         end
 
         name = metadata.name.empty? ? File.basename(path) : metadata.name
+        metadata.name name if metadata.name.empty?
 
         new(name, path, metadata)
       end
@@ -48,6 +54,10 @@ module Berkshelf
         rescue IOError
           raise CookbookNotFound, "No 'metadata.rb' file found at: '#{path}'"
         end
+        
+        metadata.name cached_name if metadata.name.empty?
+
+        metadata.name cached_name if metadata.name.empty?
 
         new(cached_name, path, metadata)
       end
@@ -59,7 +69,11 @@ module Berkshelf
       #   a checksum that can be used to uniquely identify the file understood
       #   by a Chef Server.
       def checksum(filepath)
-        Chef::ChecksumCache.generate_md5_checksum_for_file(filepath)
+        if Berkshelf.chef_11?
+          Chef::Digester.generate_md5_checksum_for_file(filepath)
+        else
+          Chef::ChecksumCache.generate_md5_checksum_for_file(filepath)
+        end
       end
     end
 

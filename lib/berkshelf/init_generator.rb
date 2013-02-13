@@ -1,6 +1,6 @@
 module Berkshelf
-  # @author Jamie Winsor <jamie@vialstudios.com>
-  # @author Josiah Kiehl <josiah@skirmisher.net>
+  # @author Jamie Winsor <reset@riotgames.com>
+  # @author Josiah Kiehl <jkiehl@riotgames.com>
   class InitGenerator < BaseGenerator
     def initialize(*args)
       super(*args)
@@ -8,10 +8,6 @@ module Berkshelf
         @cookbook_name = @options[:cookbook_name]
       end
     end
-
-    argument :path,
-      type: :string,
-      required: true
 
     class_option :metadata_entry,
       type: :boolean,

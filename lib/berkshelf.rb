@@ -1,17 +1,24 @@
-require 'yajl'
+require 'multi_json'
+require 'chef/platform'
 require 'chef/cookbook/metadata'
 require 'chef/cookbook_version'
 require 'chef/knife'
-require 'chef/platform'
+
+# Fix for Facter < 1.7.0 changing LANG to C
+# https://github.com/puppetlabs/facter/commit/f77584f4
+begin
+  old_lang = ENV['LANG']
+  require 'ridley'
+ensure
+  ENV['LANG'] = old_lang
+end
 
 require 'chozo/core_ext'
-
 require 'active_support/core_ext'
 require 'archive/tar/minitar'
 require 'forwardable'
 require 'hashie'
 require 'pathname'
-require 'ridley'
 require 'solve'
 require 'thor'
 require 'tmpdir'
@@ -24,6 +31,8 @@ require 'berkshelf/errors'
 require 'thor/monkies'
 
 Chef::Config[:cache_options][:path] = Dir.mktmpdir
+
+JSON.create_id = nil
 
 module Berkshelf
   DEFAULT_STORE_PATH = File.expand_path("~/.berkshelf").freeze
@@ -57,9 +66,9 @@ module Berkshelf
       @root ||= Pathname.new(File.expand_path('../', File.dirname(__FILE__)))
     end
 
-    # @return [Berkshelf::UI]
+    # @return [::Thor::Shell::Color]
     def ui
-      @ui ||= Berkshelf::UI.new
+      @ui ||= ::Thor::Shell::Color.new
     end
 
     # Returns the filepath to the location Berskhelf will use for
@@ -71,6 +80,20 @@ module Berkshelf
     # @return [String]
     def berkshelf_path
       ENV["BERKSHELF_PATH"] || DEFAULT_STORE_PATH
+    end
+
+    # Check if we're running a version of Chef that is in the 11.x line
+    #
+    # @return [Boolean]
+    def chef_11?
+      chef_version >= Solve::Version.new("11.0.0") && chef_version <= Solve::Version.new("12.0.0")
+    end
+
+    # Return the loaded version of Chef
+    #
+    # @return [Solve::Version]
+    def chef_version
+      @chef_version ||= Solve::Version.new(::Chef::VERSION)
     end
 
     # @return [String]

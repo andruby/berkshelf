@@ -5,12 +5,12 @@ gemspec
 group :development do
   gem 'coolline'
   gem 'guard', '>= 1.5.0'
+  gem 'guard-cane'
   gem 'guard-cucumber'
   gem 'guard-rspec'
   gem 'guard-spork'
   gem 'guard-yard'
   gem 'redcarpet'
-  gem 'spork'
   gem 'yard'
 
   require 'rbconfig'
@@ -35,7 +35,6 @@ group :development do
 end
 
 group :test do
-  gem 'aruba'
   gem 'fuubar'
   gem 'json_spec'
   gem 'rake', '>= 0.9.2.2'
